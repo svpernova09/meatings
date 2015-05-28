@@ -136,6 +136,7 @@ return [
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
         'Laravel\Socialite\SocialiteServiceProvider',
+        'Illuminate\Html\HtmlServiceProvider',
 
 		/*
 		 * Application Service Providers...
