@@ -11,21 +11,13 @@
 |
 */
 
-//Route::get('/', 'WelcomeController@index');
+Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+//	'password' => 'Auth\PasswordController',
 ]);
 
-
-get('/', function()
-{
-   if(Auth::check()) return 'Weclome back, ' . Auth::user()->name;
-
-    return 'Hi guest. ' . link_to('login', 'Login with Google');
-});
-
-get('login', '\Meatings\Http\Controllers\Auth\AuthController@login');
+Route::get('login', '\Meatings\Http\Controllers\Auth\AuthController@login');

@@ -1,4 +1,5 @@
 <?php namespace Meatings\Http\Controllers;
+use Auth;
 
 class WelcomeController extends Controller {
 
@@ -30,7 +31,12 @@ class WelcomeController extends Controller {
 	 */
 	public function index()
 	{
-		return view('welcome');
+
+
+        if(Auth::check()) return view('welcome');
+
+        return view('login');
+        return 'Hi guest. ' . link_to('login', 'Login with Google');
 	}
 
 }
