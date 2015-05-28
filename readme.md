@@ -1,6 +1,6 @@
 ## Meatings
 
-Every needed to allow users to sign up for meeting time slots?
+Ever needed to allow users to sign up for meeting time slots?
 
 
 
