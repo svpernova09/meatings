@@ -1,9 +1,13 @@
 <?php namespace Meatings\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
 use Meatings\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Meatings\AuthenticateUser;
+
 
 class AuthController extends Controller {
 
@@ -20,13 +24,7 @@ class AuthController extends Controller {
 
 	use AuthenticatesAndRegistersUsers;
 
-	/**
-	 * Create a new authentication controller instance.
-	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
-	 * @return void
-	 */
+
 	public function __construct(Guard $auth, Registrar $registrar)
 	{
 		$this->auth = $auth;
@@ -34,5 +32,19 @@ class AuthController extends Controller {
 
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
+
+    public function login(AuthenticateUser $authenticateUser, Request $request)
+    {
+
+        return $authenticateUser->execute($request->has('code'), $this);
+    }
+
+    public function userHasLoggedIn($user)
+    {
+        return redirect('/');
+    }
+
+
+
 
 }
