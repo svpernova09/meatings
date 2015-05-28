@@ -1,5 +1,5 @@
 suites:
     main:
-        namespace: App
-        psr4_prefix: App
+        namespace: Meatings
+        psr4_prefix: Meatings
         src_path: app

@@ -1,7 +1,7 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
+	"name": "svpernova09/meatings",
+	"description": "Find and schedule meetings with other humans.",
+	"keywords": ["meetings", "scheduling"],
 	"license": "MIT",
 	"type": "project",
 	"require": {
@@ -16,7 +16,7 @@
 			"database"
 		],
 		"psr-4": {
-			"App\\": "app/"
+			"Meatings\\": "app/"
 		}
 	},
 	"autoload-dev": {
