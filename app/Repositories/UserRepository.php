@@ -6,7 +6,7 @@ use Meatings\User;
 
 class UserRepository {
 
-    public function findByUsernameOrCreate($userData)
+    public function findByUsernameOrCreate($userData, $code)
     {
         $user = User::firstOrCreate([
             'name' => $userData->getName(),
@@ -15,6 +15,7 @@ class UserRepository {
         ]);
 
         $user->token = $userData->token;
+        $user->code = $code;
         $user->save();
 
         return $user;

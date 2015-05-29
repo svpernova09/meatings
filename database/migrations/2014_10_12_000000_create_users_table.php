@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration {
 			$table->string('password', 60);
             $table->string('avatar');
             $table->string('token');
+            $table->string('code');
             $table->text('calendar_id');
 			$table->rememberToken();
 			$table->timestamps();
