@@ -1,5 +1,7 @@
 ## Meatings
 
+[![Build Status](https://travis-ci.org/svpernova09/meatings.svg)](https://travis-ci.org/svpernova09/meatings)
+
 Ever needed to allow users to sign up for meeting time slots?
 
 
