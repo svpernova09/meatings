@@ -33,7 +33,12 @@
                                 </div>
                             </div>
 
-
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Calendar Id </label>
+                                <div class="col-md-6">
+                                    {!! Form::text('calendar_id', null, ['class' => 'form-control']) !!}
+                                </div>
+                            </div>
 
 
 
