@@ -67,9 +67,9 @@ class CalendarController extends Controller {
         $results = $service->events->listEvents($calendarId, $optParams);
 
         if (count($results->getItems()) > 0) {
-            print "Upcoming events:\n";
+            print "Upcoming events: <br>";
             foreach ( $results->getItems() as $event ) {
-                var_dump($event);
+                echo('Event: . ' . $event->summary . ' Start: ' . $event->start->dateTime . '<br>');
             }
         }
 	}
