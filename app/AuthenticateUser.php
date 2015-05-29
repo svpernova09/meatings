@@ -33,12 +33,14 @@ class AuthenticateUser {
     private function getAuthorizationFirst()
     {
 
-        return $this->socialite->driver('google')->redirect();
+//        return $this->socialite->with('google')->scopes(['https://www.googleapis.com/auth/calendar'])->redirect();
+        return $this->socialite->with('google')->redirect();
+
     }
 
     private function getGoogleUser()
     {
 
-        return $this->socialite->driver('google')->user();
+        return $this->socialite->with('google')->user();
     }
 }
