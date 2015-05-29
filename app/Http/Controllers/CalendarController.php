@@ -86,12 +86,11 @@ class CalendarController extends Controller {
 
         $client = new \Google_Client();
         $client->setApplicationName(env('GOOGLE_APP_NAME'));
-//        $client->setDeveloperKey(env('GOOGLE_API'));
-        $client->setClientId(env('GOOGLE_CLIENT_ID'));
-        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->authenticate($user->token);
-        $access_token = $client->getAccessToken();
-        $client->setAccessToken($access_token);
+        $client->setDeveloperKey(env('GOOGLE_API'));
+
+//        $client->authenticate($user->token);
+//        $access_token = $client->getAccessToken();
+//        $client->setAccessToken($access_token);
 
 
         $service = new Google_Service_Calendar($client);
