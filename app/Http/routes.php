@@ -10,6 +10,32 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::get('/test', function()
+{
+    $user = Meatings\User::find(1);
+    $client = new \Google_Client();
+    $client->setApplicationName(env('GOOGLE_APP_NAME'));
+    $client->setDeveloperKey($user->token);
+
+
+    $service = new Google_Service_Calendar($client);
+
+
+    $calendarList = $service->calendarList->listCalendarList();
+
+    while(true) {
+        foreach ($calendarList->getItems() as $calendarListEntry) {
+            echo $calendarListEntry->getSummary();
+        }
+        $pageToken = $calendarList->getNextPageToken();
+        if ($pageToken) {
+            $optParams = array('pageToken' => $pageToken);
+            $calendarList = $service->calendarList->listCalendarList($optParams);
+        } else {
+            break;
+        }
+    }
+});
 
 Route::get('/', 'WelcomeController@index');
 
