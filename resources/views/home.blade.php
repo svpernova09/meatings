@@ -8,7 +8,7 @@
 				<div class="panel-heading">Home</div>
 
 				<div class="panel-body">
-					Hello {{ Auth::user()->name }}, you are logged in.
+                    <img class="" alt="meating" src="/img/meatings.jpg">
 				</div>
 			</div>
 		</div>
