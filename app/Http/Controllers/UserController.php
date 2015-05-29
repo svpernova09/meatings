@@ -2,6 +2,7 @@
 
 use Meatings\Http\Requests;
 use Meatings\User;
+use Input;
 
 class UserController extends Controller {
 
@@ -63,6 +64,7 @@ class UserController extends Controller {
         $input = Input::all();
 
         $user->name = array_get($input, 'name');
+        $user->calendar_id = array_get($input, 'calendar_id');
 
         $user->save();
 

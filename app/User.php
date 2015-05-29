@@ -22,7 +22,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'avatar'];
+	protected $fillable = ['name', 'email', 'avatar', 'calendar_id', 'token'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -33,7 +33,28 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function getCalendars()
     {
+        $user = User::find($user_id);
 
+        $client = new \Google_Client();
+        $client->setApplicationName(env('GOOGLE_APP_NAME'));
+        $client->setDeveloperKey(env('GOOGLE_API'));
+        $service = new Google_Service_Calendar($client);
+
+
+        $calendarList = $service->calendarList->listCalendarList();
+
+        while(true) {
+            foreach ($calendarList->getItems() as $calendarListEntry) {
+                echo $calendarListEntry->getSummary();
+            }
+            $pageToken = $calendarList->getNextPageToken();
+            if ($pageToken) {
+                $optParams = array('pageToken' => $pageToken);
+                $calendarList = $service->calendarList->listCalendarList($optParams);
+            } else {
+                break;
+            }
+        }
     }
 
 }
