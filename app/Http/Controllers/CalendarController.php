@@ -4,12 +4,20 @@ use Meatings\Http\Requests;
 use Meatings\Http\Controllers\Controller;
 use Meatings\User;
 use Google_Service_Calendar;
-
+use Google_Service_Calendar_Event;
+use Google_Service_Calendar_EventDateTime;
+use Google_Service_Calendar_EventAttendee;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller {
+    private $user;
 
-	/**
+    function __construct( User $user ) {
+        $this->user = $user;
+    }
+
+
+    /**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
@@ -24,9 +32,35 @@ class CalendarController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($user_id)
 	{
-		//
+
+        $user = $this->user->find($user_id);
+
+        $client = new \Google_Client();
+        $client->setApplicationName(env('GOOGLE_APP_NAME'));
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+
+        $service = new Google_Service_Calendar($client);
+
+        $event = new Google_Service_Calendar_Event();
+        $event->setSummary('Appointment');
+        $event->setLocation('Somewhere');
+        $start = new Google_Service_Calendar_EventDateTime();
+        $start->setDateTime('2011-06-03T10:00:00.000-07:00');
+        $event->setStart($start);
+        $end = new Google_Service_Calendar_EventDateTime();
+        $end->setDateTime('2011-06-03T10:25:00.000-07:00');
+        $event->setEnd($end);
+        $attendee1 = new Google_Service_Calendar_EventAttendee();
+        $attendee1->setEmail('joe@joeferguson.me');
+
+        $attendees = array($attendee1);
+        $event->attendees = $attendees;
+        $createdEvent = $service->events->insert('primary', $event);
+
+        echo $createdEvent->getId();
 	}
 
 	/**
@@ -48,7 +82,7 @@ class CalendarController extends Controller {
 	public function show($user_id)
 	{
 
-        $user = User::find($user_id);
+        $user = $this->user->find($user_id);
 
         $client = new \Google_Client();
         $client->setApplicationName(env('GOOGLE_APP_NAME'));
