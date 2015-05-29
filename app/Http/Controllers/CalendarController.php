@@ -55,8 +55,6 @@ class CalendarController extends Controller {
         $client->setDeveloperKey(env('GOOGLE_API'));
         $service = new Google_Service_Calendar($client);
 
-
-
         $calendarId = $user->calendar_id;
         $optParams = array(
             'maxResults' => 5,
@@ -65,15 +63,14 @@ class CalendarController extends Controller {
             'timeMin' => date('c'),
         );
         $results = $service->events->listEvents($calendarId, $optParams);
-
+        $events = [];
         if (count($results->getItems()) > 0) {
-            print "Upcoming events: <br>";
             foreach ( $results->getItems() as $event ) {
-                echo('Event: . ' . $event->summary . ' Start: ' . $event->start->dateTime . '<br>');
+                $events[] = $event;
             }
         }
-	}
 
-
+        return view('users.calendar')->with('events', $events);
+    }
 
 }
