@@ -21,3 +21,5 @@ Route::controllers([
 ]);
 
 Route::get('login', '\Meatings\Http\Controllers\Auth\AuthController@login');
+Route::resource('users', '\Meatings\Http\Controllers\UserController');
+Route::get('user/{user}/calendar', ['as' => 'user.calendar', 'uses' => 'CalendarController@show']);
