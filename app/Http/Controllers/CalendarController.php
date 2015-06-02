@@ -82,17 +82,12 @@ class CalendarController extends Controller {
 	 */
 	public function show($user_id)
 	{
-
         $user = $this->user->find($user_id);
-//        dd(\Session::all());
 
         $client = new Google_Client();
         $client->setClientId(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $client->setRedirectUri(env('GOOGLE_CALLBACK_URL'));
-
-//        $_SESSION['access_token'] = $client->getAccessToken();
-//        $client->setScopes($this->scopes);
 
         $client->authenticate($user->code);
         $service = new Google_Service_Calendar($client);
