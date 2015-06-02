@@ -86,13 +86,22 @@ class CalendarController extends Controller {
 
         $client = new \Google_Client();
         $client->setApplicationName(env('GOOGLE_APP_NAME'));
-        $client->setDeveloperKey(env('GOOGLE_API'));
-
-//        $client->authenticate($user->token);
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+$token = json_decode($user->token);
+        $token1 = $client->getRefreshToken($token->access_token);
+        $token2 = $client->refreshToken($user->code);
+        $client->authenticate($token2);
+        dd($client->isAccessTokenExpired());
 //        $access_token = $client->getAccessToken();
 //        $client->setAccessToken($access_token);
-
-
+        $scopes =
+            'https://www.googleapis.com/auth/plus.me ' .
+            'https://www.googleapis.com/auth/plus.login ' .
+            'https://www.googleapis.com/auth/plus.profile.emails.read ' .
+            'https://www.googleapis.com/auth/calendar';
+        $client->setScopes($scopes);
+$client->getScopes();
         $service = new Google_Service_Calendar($client);
 
         $calendarId = $user->calendar_id;
