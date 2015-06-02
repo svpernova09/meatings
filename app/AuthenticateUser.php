@@ -12,12 +12,18 @@ class AuthenticateUser {
     private $users;
     private $socialite;
     private $auth;
+    private $scopes;
 
     public function __construct(UserRepository $users, Socialite $socialite, Guard $auth)
     {
         $this->users = $users;
         $this->socialite = $socialite;
         $this->auth = $auth;
+        $this->scopes =
+            'https://www.googleapis.com/auth/plus.me ' .
+            'https://www.googleapis.com/auth/plus.login ' .
+            'https://www.googleapis.com/auth/plus.profile.emails.read ' .
+            'https://www.googleapis.com/auth/calendar';
     }
 
     public function execute($hasCode, $listener)
@@ -26,35 +32,42 @@ class AuthenticateUser {
         if (!$hasCode) return $this->getAuthorizationFirst();
 
         $code = $_REQUEST['code'];
-        $user = $this->users->findByUsernameOrCreate($this->getGoogleUser(), $code);
 
+        $client = new Google_Client();
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(env('GOOGLE_CALLBACK_URL'));
+
+        $client->authenticate($code);
+        $_SESSION['access_token'] = $client->getAccessToken();
+        $client->setScopes($this->scopes);
+
+        $plus = new \Google_Service_Plus($client);
+        $person = $plus->people->get('me');
+
+        $user = $this->users->findByUsernameOrCreate($person, $code);
         $this->auth->login($user, true);
 
-        return $listener->userHasLoggedIn($user);
+        return redirect('home');
     }
 
     private function getAuthorizationFirst()
     {
-        $scopes = [
-            'https://www.googleapis.com/auth/plus.me',
-            'https://www.googleapis.com/auth/plus.login',
-            'https://www.googleapis.com/auth/plus.profile.emails.read',
-            'https://www.googleapis.com/auth/calendar',
-        ];
+        $client = new Google_Client();
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(env('GOOGLE_CALLBACK_URL'));
+        $client->setScopes($this->scopes);
 
-        return $this->socialite->with('google')->scopes($scopes)->redirect();
-//        return $this->socialite->with('google')->redirect();
+        $authUrl = $client->createAuthUrl();
+        header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
 
+//        return $this->socialite->with('google')->scopes($scopes)->redirect();
 
-//        $client = new Google_Client();
-//        $client->setClientId(env('GOOGLE_CLIENT_ID'));
-//        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-//        $client->setRedirectUri(env('GOOGLE_CALLBACK_URL'));
     }
 
     private function getGoogleUser()
     {
-
-        return $this->socialite->with('google')->scopes(['https://www.googleapis.com/auth/calendar'])->user();
+//        return $this->socialite->with('google')->scopes(['https://www.googleapis.com/auth/calendar'])->user();
     }
 }

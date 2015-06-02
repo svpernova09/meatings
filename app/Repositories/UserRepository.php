@@ -9,12 +9,12 @@ class UserRepository {
     public function findByUsernameOrCreate($userData, $code)
     {
         $user = User::firstOrCreate([
-            'name' => $userData->getName(),
-            'email' => $userData->getEmail(),
-            'avatar' => $userData->getAvatar(),
+            'name' => $userData->getDisplayName(),
+            'email' => $userData->getEmails()['0']['value'],
+            'avatar' => $userData->getImage()->url,
         ]);
 
-        $user->token = $userData->token;
+        $user->token = $_SESSION['access_token'];
         $user->code = $code;
         $user->save();
 
