@@ -3,6 +3,7 @@
 use Meatings\Http\Requests;
 use Meatings\Http\Controllers\Controller;
 use Meatings\User;
+use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 use Google_Service_Calendar_EventDateTime;
@@ -83,16 +84,17 @@ class CalendarController extends Controller {
 	{
 
         $user = $this->user->find($user_id);
+//        dd(\Session::all());
 
-        $client = new \Google_Client();
-        $client->setApplicationName(env('GOOGLE_APP_NAME'));
-        $client->setDeveloperKey(env('GOOGLE_API'));
+        $client = new Google_Client();
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(env('GOOGLE_CALLBACK_URL'));
 
-//        $client->authenticate($user->token);
-//        $access_token = $client->getAccessToken();
-//        $client->setAccessToken($access_token);
+//        $_SESSION['access_token'] = $client->getAccessToken();
+//        $client->setScopes($this->scopes);
 
-
+        $client->authenticate($user->code);
         $service = new Google_Service_Calendar($client);
 
         $calendarId = $user->calendar_id;

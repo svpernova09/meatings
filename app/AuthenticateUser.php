@@ -12,12 +12,19 @@ class AuthenticateUser {
     private $users;
     private $socialite;
     private $auth;
+    private $scopes;
 
     public function __construct(UserRepository $users, Socialite $socialite, Guard $auth)
     {
         $this->users = $users;
         $this->socialite = $socialite;
         $this->auth = $auth;
+        $this->scopes = [
+            'https://www.googleapis.com/auth/plus.me',
+            'https://www.googleapis.com/auth/plus.login',
+            'https://www.googleapis.com/auth/plus.profile.emails.read',
+            'https://www.googleapis.com/auth/calendar',
+        ];
     }
 
     public function execute($hasCode, $listener)
@@ -35,14 +42,8 @@ class AuthenticateUser {
 
     private function getAuthorizationFirst()
     {
-        $scopes = [
-            'https://www.googleapis.com/auth/plus.me',
-            'https://www.googleapis.com/auth/plus.login',
-            'https://www.googleapis.com/auth/plus.profile.emails.read',
-            'https://www.googleapis.com/auth/calendar',
-        ];
 
-        return $this->socialite->with('google')->scopes($scopes)->redirect();
+        return $this->socialite->with('google')->scopes($this->scopes)->redirect();
 //        return $this->socialite->with('google')->redirect();
 
 
@@ -55,6 +56,6 @@ class AuthenticateUser {
     private function getGoogleUser()
     {
 
-        return $this->socialite->with('google')->scopes(['https://www.googleapis.com/auth/calendar'])->user();
+        return $this->socialite->with('google')->scopes($this->scopes)->user();
     }
 }
